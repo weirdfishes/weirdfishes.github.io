@@ -28,9 +28,16 @@ url: "https://sharat.me" # the base hostname & protocol for your site, e.g. http
 github_username:  weirdfishes
 
 # Build settings
-theme: minima
+# theme: minima
 plugins:
   - jekyll-feed
+
+footer: '<a href="https://bsky.app/profile/sharat.me">🦋</a> | <a href="mailto:hi@sharat.me">hi@sharat.me</a>'
+style: dark # dark (default), light or hacker
+listen_for_clients_preferred_style: true
+
+header_pages:
+  - index.md
 
 # Exclude from processing.
 # The following items will not be processed, by default.
