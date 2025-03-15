@@ -1,12 +1,10 @@
 ---
-title: games
+title: Games
 layout: page
 permalink: /games
 ---
 
-# Video Games
-
-I've been playing video games since I can remember. These are some of my favorites.
+I've been playing video games for as long as I can remember. These are some of my favorites.
 
 ![5x5](/assets/img/5x5_games.png)
 

@@ -2,4 +2,25 @@
 layout: default
 ---
 
+<div>
+{%- assign date_format = "%Y %B %-d" -%}
+{{ page.date | date: date_format }}
+{%- if page.updated_date -%}
+&nbsp// Updated {{ page.updated_date | date: date_format }}
+{%- endif -%}
+</div>
+<!-- 
+<div>
+  {%- if page.tags.size > 0 -%}
+  <ul>
+    {%- for tag in page.tags -%}
+    <li>
+      {{ tag }}
+    </li>
+    {%- endfor -%}
+  </ul>
+  {%- endif -%}
+</div> -->
+<br />
+
 {{ content }}

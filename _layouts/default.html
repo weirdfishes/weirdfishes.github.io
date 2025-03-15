@@ -11,6 +11,12 @@
 
       {%- include header.html -%}
 
+    {%- if page.title != "/" -%}
+    <div>
+      {{ page.title }}
+    </div>
+    <br />
+    {%- endif -%}
     <main>
       {{ content }}
     </main>

@@ -32,12 +32,22 @@ github_username:  weirdfishes
 plugins:
   - jekyll-feed
 
-footer: '<a href="https://bsky.app/profile/sharat.me">🦋</a> | <a href="mailto:hi@sharat.me">hi@sharat.me</a>'
+footer: '<a href="https://bsky.app/profile/sharat.me" target="_blank">🦋</a> | <a href="mailto:hi@sharat.me">hi@sharat.me</a>'
 style: dark # dark (default), light or hacker
 listen_for_clients_preferred_style: true
 
 header_pages:
   - index.md
+  - blog.md
+
+defaults:
+  - 
+    scope:
+      path: "_posts"
+      type: "posts"
+    values:
+      layout: "post"
+      permalink: "/blog/:title"
 
 # Exclude from processing.
 # The following items will not be processed, by default.
