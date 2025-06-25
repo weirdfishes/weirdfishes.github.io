@@ -1,0 +1,149 @@
+<div>
+<style>
+  .gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+  .gallery a img {
+    width: 200px;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    transition: transform 0.2s ease;
+  }
+  .gallery a img:hover {
+    transform: scale(1.05);
+  }
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 0.5rem;
+  }
+  .lightbox:target {
+    display: flex;
+  }
+  .lightbox .close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    color: white;
+    text-decoration: none;
+  }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Keyboard navigation and Escape to close
+      document.addEventListener('keydown', (e) => {
+        const hash = window.location.hash;
+        if (!hash) return; // no modal open
+    
+        const current = document.querySelector(hash);
+        if (!current || !current.classList.contains('lightbox')) return;
+    
+        const group = current.dataset.group;
+        const idx = parseInt(current.dataset.index, 10);
+    
+        if (e.key === 'Escape') {
+          const hash = window.location.hash;
+          if (!hash) return;
+
+          e.preventDefault();
+          location.hash = '';
+          window.scrollTo(0, 0);
+
+        }
+        else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          const next = document.getElementById(`${group}-img${idx + 1}`);
+          if (next) window.location.hash = next.id;
+        }
+        else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const prev = document.getElementById(`${group}-img${idx - 1}`);
+          if (prev) window.location.hash = prev.id;
+        }
+      });
+    
+      // Swipe support
+      let touchStartX = 0;
+      let touchEndX = 0;
+    
+      document.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+    
+      document.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleGesture();
+      }, { passive: true });
+    
+      function handleGesture() {
+        const hash = window.location.hash;
+        if (!hash) return;
+    
+        const current = document.querySelector(hash);
+        if (!current || !current.classList.contains('lightbox')) return;
+    
+        const group = current.dataset.group;
+        const idx = parseInt(current.dataset.index, 10);
+    
+        const swipeThreshold = 50; // min px to consider a swipe
+    
+        if (touchEndX + swipeThreshold < touchStartX) {
+          // Swipe left → next image
+          const next = document.getElementById(`${group}-img${idx + 1}`);
+          if (next) window.location.hash = next.id;
+        }
+        else if (touchEndX - swipeThreshold > touchStartX) {
+          // Swipe right → prev image
+          const prev = document.getElementById(`${group}-img${idx - 1}`);
+          if (prev) window.location.hash = prev.id;
+        }
+      }
+    });
+  </script>
+
+  {% assign folder = include.folder %}
+  {% assign full_path = "assets/img/galleries/" | append: folder | append: "/full" %}
+  {% assign thumb_path = "assets/img/galleries/" | append: folder | append: "/thumbs" %}
+  
+  <div class="gallery">
+    {% assign gallery_id = folder | replace: " ", "-" %}
+    {% assign index = 0 %}
+    {% for file in site.static_files %}
+      {% if file.path contains full_path %}
+        {% assign filename = file.path | split: "/" | last %}
+        {% assign id = gallery_id | append: "-img" | append: index %}
+        <a href="#{{ id }}">
+          <img src="/{{ thumb_path }}/{{ filename }}" alt="{{ filename }}">
+        </a>
+        {% assign index = index | plus: 1 %}
+      {% endif %}
+    {% endfor %}
+  </div>
+  
+  <!-- Lightbox Modals -->
+  {% assign index = 0 %}
+  {% for file in site.static_files %}
+    {% if file.path contains full_path %}
+      {% assign filename = file.path | split: "/" | last %}
+      {% assign id = gallery_id | append: "-img" | append: index %}
+      <div id="{{ id }}" class="lightbox" data-group="{{ gallery_id }}" data-index="{{ index }}">
+        <a href="#" class="close">&times;</a>
+        <img src="/{{ full_path }}/{{ filename }}" alt="{{ filename }}">
+      </div>
+      {% assign index = index | plus: 1 %}
+    {% endif %}
+  {% endfor %}
+</div>
